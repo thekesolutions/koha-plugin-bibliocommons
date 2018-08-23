@@ -97,7 +97,7 @@
       },
       "x-koha-authorization": {
         "permissions": {
-          "borrowers": "1"
+          "catalogue": "1"
         }
       }
     }
