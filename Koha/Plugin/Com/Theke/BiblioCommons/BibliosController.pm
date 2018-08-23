@@ -66,6 +66,24 @@ sub list_ids {
     return $c->render( status => 200, openapi => \@ids );
 }
 
+=head3 get_biblio
+
+=cut
+
+sub get_biblio {
+    my $c = shift->openapi->valid_input or return;
+
+    my $biblio_id = $c->validation->param('biblio_id');
+    my $metadatas = Koha::Biblio::Metadatas->search({ biblionumber => $biblio_id, format => 'marcxml' });
+
+    unless ($metadatas->count > 0) {
+        return $c->render( status => 404, openapi => { error => "Object not found." } );
+    }
+
+    return $c->render( status => 200, data => $metadatas->next->metadata );
+}
+
+
 =head2 Internal methods
 
 =head3 to_id_object

@@ -1,4 +1,45 @@
 {
+  "/biblios/{biblio_id}": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio",
+      "operationId": "get_biblio",
+      "tags": ["biblios"],
+      "parameters": [
+        {
+          "description": "Internal identifier for bibliographic records",
+          "in": "path",
+          "name": "biblio_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/marcxml+xml"
+      ],
+      "responses": {
+        "200": {
+          "description": "A representation of a bibliographic record"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
   "/biblios/ids": {
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#list_ids",
