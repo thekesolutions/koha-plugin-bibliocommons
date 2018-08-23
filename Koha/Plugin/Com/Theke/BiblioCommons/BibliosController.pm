@@ -22,6 +22,8 @@ use Mojo::Base 'Mojolicious::Controller';
 use C4::Biblio;
 use Koha::Biblio::Metadatas;
 
+use MARC::Record::MiJ;
+
 =head1 Koha::Plugin::Com::Theke::BiblioCommons::BibliosController
 
 A class implementing the controller methods for the biblios-related API
@@ -82,8 +84,17 @@ sub get_biblio {
     }
 
     $c->app->types->type( marcxml => 'application/marcxml+xml' );
+    $c->app->types->type( mij     => 'application/marc-in-json' );
+    $c->app->types->type( marc    => 'application/marc' );
 
-    return $c->render( status => 200, format => 'marcxml', data => $record->as_xml_record() );
+    #return $c->render( status => 200, format => 'marcxml', data => $record->as_xml_record() );
+    return
+        $c->respond_to(
+            marcxml => { status => 200, format => 'marcxml', data => $record->as_xml_record() },
+            mij     => { status => 200, format => 'mij',     data => $record->to_mij },
+            marc    => { status => 200, format => 'marc',    data => $record->as_usmarc() },
+            any     => { status => 200, format => 'marcxml', data => $record->as_xml_record() }
+        );
 }
 
 =head2 Internal methods
