@@ -22,6 +22,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use C4::Biblio;
 use Koha::Biblio::Metadatas;
 
+use Encode;
 use MARC::Record::MiJ;
 
 =head1 Koha::Plugin::Com::Theke::BiblioCommons::BibliosController
@@ -64,7 +65,7 @@ sub list_ids {
     }
 
     my @ids = map { _to_id_object($_) }
-        Koha::Biblio::Metadatas->search( $filter, $attributes )->as_list;
+        Koha::Biblio::Metadatas->search( $filter, $attributes )->get_column('biblionumber');
 
     return $c->render( status => 200, openapi => \@ids );
 }
@@ -87,13 +88,12 @@ sub get_biblio {
     $c->app->types->type( mij     => 'application/marc-in-json' );
     $c->app->types->type( marc    => 'application/marc' );
 
-    #return $c->render( status => 200, format => 'marcxml', data => $record->as_xml_record() );
     return
         $c->respond_to(
-            marcxml => { status => 200, format => 'marcxml', data => $record->as_xml_record() },
-            mij     => { status => 200, format => 'mij',     data => $record->to_mij },
+            marcxml => { status => 200, format => 'marcxml', data => Encode::encode( "UTF-8", $record->as_xml_record()) },
+            mij     => { status => 200, format => 'mij',     data => Encode::encode( "UTF-8", $record->to_mij ) },
             marc    => { status => 200, format => 'marc',    data => $record->as_usmarc() },
-            any     => { status => 200, format => 'marcxml', data => $record->as_xml_record() }
+            any     => { status => 200, format => 'marcxml', data => Encode::encode( "UTF-8", $record->as_xml_record() ) }
         );
 }
 
@@ -106,13 +106,13 @@ Helper class to convert Koha::Biblio::Metadata objects into biblio id result obj
 =cut
 
 sub _to_id_object {
-    my ($biblio_metadata) = @_;
+    my ($biblio_id) = @_;
 
     my $id_object = {
-        id     => $biblio_metadata->biblionumber,
+        id     => $biblio_id,
         _links => {
             self => {
-                href => '/api/v1/contrib/bibliocommons/biblios/' . $biblio_metadata->biblionumber
+                href => '/api/v1/contrib/bibliocommons/biblios/' . $biblio_id
             }
         }
     };
