@@ -22,7 +22,6 @@ use Mojo::Base 'Mojolicious::Controller';
 use C4::Biblio;
 use Koha::Biblio::Metadatas;
 
-use Encode;
 use MARC::Record::MiJ;
 
 =head1 Koha::Plugin::Com::Theke::BiblioCommons::BibliosController
@@ -90,11 +89,32 @@ sub get_biblio {
 
     return
         $c->respond_to(
-            marcxml => { status => 200, format => 'marcxml', data => Encode::encode( "UTF-8", $record->as_xml_record()) },
-            mij     => { status => 200, format => 'mij',     data => Encode::encode( "UTF-8", $record->to_mij ) },
-            marc    => { status => 200, format => 'marc',    data => $record->as_usmarc() },
-            any     => { status => 200, format => 'marcxml', data => Encode::encode( "UTF-8", $record->as_xml_record() ) }
+            marcxml => { status => 200, format => 'marcxml', text => $record->as_xml_record },
+            mij     => { status => 200, format => 'mij',     text => $record->to_mij  },
+            marc    => { status => 200, format => 'marc',    text => $record->as_usmarc },
+            any     => { status => 200, format => 'marcxml', text => $record->as_xml_record }
         );
+}
+
+=head2 get_biblio_items
+
+=cut
+
+sub get_biblio_items {
+    my $c = shift->openapi->valid_input or return;
+    my $biblio_id = $c->validation->param('biblio_id');
+
+    my $biblio = Koha::Biblios->find($biblio_id);
+    unless ($biblio) {
+        return $c->render( status => 404, openapi => { error => 'Object not found.' } );
+    }
+
+    my $items_set = Koha::Items->search( { biblionumber => $biblio_id } );
+    my @items = map {
+        wrap_item( Koha::Plugin::Com::Theke::BiblioCommons::ItemsController::to_api( $_->TO_JSON ) )
+    } @{ $items_set->as_list };
+
+    return $c->render( status => 200, openapi => \@items );
 }
 
 =head2 Internal methods
@@ -118,6 +138,22 @@ sub _to_id_object {
     };
 
     return $id_object;
+}
+
+=head3 wrap_item
+
+=cut
+
+sub wrap_item {
+    my ($item) = @_;
+
+    $item->{_links} =  {
+            self => {
+                href => '/api/v1/contrib/bibliocommons/items/' . $item->{item_id}
+            }
+        };
+
+    return $item;
 }
 
 1;

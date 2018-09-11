@@ -40,6 +40,47 @@
       }
     }
   },
+  "/biblios/{biblio_id}/items": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio_items",
+      "operationId": "get_biblio_items",
+      "tags": ["biblios"],
+      "parameters": [
+        {
+          "description": "Internal identifier for bibliographic records",
+          "in": "path",
+          "name": "biblio_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Items attached to the bibliographic record"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
   "/biblios/ids": {
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#list_ids",
