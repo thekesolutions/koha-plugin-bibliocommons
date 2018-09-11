@@ -9,10 +9,19 @@ WHOLE POINT OF THIS!
 
 ## Implemented endpoints
 
-* /bibliocommons/biblios/:biblio_id
-* /bibliocommons/biblios/:biblio_id/holds/count
-* /bibliocommons/biblios/:biblio_id/ids
-* /bibliocommons/biblios/:biblio_id/items
-* /bibliocommons/items/:item_id
-* /bibliocommons/items/:item_id/holds/count
-* /bibliocommons/items/ids
+* /biblios/:biblio_id
+* /biblios/:biblio_id/holds/count
+* /biblios/:biblio_id/items
+* /biblios/ids
+* /items/:item_id
+* /items/:item_id/holds/count
+* /items/ids
+* /libraries
+
+## Install
+
+Download the latest _.kpz_ file from the [releases](https://github.com/thekesolutions/koha-plugin-bibliocommons/releases) page.
+Install it as any other plugin following the general [plugin install instrucions](https://wiki.koha-community.org/wiki/Koha_plugins).
+
+Caveat: If you want to try this endpoints, you will need to do it on top of the [Koha master branch](https://gitlab.com/koha-community/Koha)
+adding the patches from [bug 21116](https://bugs.koha-community.org/bugzilla3/show_bug.cgi?id=21116).
