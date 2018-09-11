@@ -40,6 +40,47 @@
       }
     }
   },
+  "/biblios/{biblio_id}/holds": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio_holds_count",
+      "operationId": "get_biblio_holds_count",
+      "tags": ["biblios"],
+      "parameters": [
+        {
+          "description": "Internal identifier for bibliographic records",
+          "in": "path",
+          "name": "biblio_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Holds count for the biblio"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
   "/biblios/{biblio_id}/items": {
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio_items",
@@ -163,6 +204,47 @@
       "responses": {
         "200": {
           "description": "A representation of an item"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
+  "/items/{item_id}/holds": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::ItemsController#get_item_holds_count",
+      "operationId": "get_item_holds_count",
+      "tags": ["items"],
+      "parameters": [
+        {
+          "description": "Internal identifier for items",
+          "in": "path",
+          "name": "item_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Holds count for the item"
         },
         "404": {
           "description": "An error occured",
