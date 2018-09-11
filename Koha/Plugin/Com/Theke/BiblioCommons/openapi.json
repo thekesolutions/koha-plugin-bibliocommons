@@ -40,7 +40,7 @@
       }
     }
   },
-  "/biblios/{biblio_id}/holds": {
+  "/biblios/{biblio_id}/holds/count": {
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio_holds_count",
       "operationId": "get_biblio_holds_count",
@@ -225,7 +225,7 @@
       }
     }
   },
-  "/items/{item_id}/holds": {
+  "/items/{item_id}/holds/count": {
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::ItemsController#get_item_holds_count",
       "operationId": "get_item_holds_count",
