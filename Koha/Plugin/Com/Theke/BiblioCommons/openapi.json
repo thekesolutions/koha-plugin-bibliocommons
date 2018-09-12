@@ -496,6 +496,10 @@
                     "description": "Card number for the patron",
                     "type": "string"
                   },
+                  "user_id": {
+                    "description": "User ID",
+                    "type": "string"
+                  },
                   "password": {
                     "description": "Password for the patron",
                     "type": "string"

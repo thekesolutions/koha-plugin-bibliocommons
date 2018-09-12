@@ -41,14 +41,21 @@ sub validate_credentials {
     my $body        = $c->validation->param('body');
     my $card_number = $body->{card_number};
     my $password    = $body->{password};
+    my $user_id     = $body->{user_id};
 
-    if (   !defined $cardnumber
-        or !defined $password )
-    {
+    unless ( ( defined $card_number or
+               defined $user_id ) and
+               defined $password ) {
         return $c->render( status => 400, openapi => { error => 'Invalid parameters' } );
     }
 
-    my $patron = Koha::Patrons->find( { cardnumber => $card_number } );
+    my $patron;
+    if ( defined $card_number ) {
+        $patron = Koha::Patrons->find( { cardnumber => $card_number } );
+    }
+    else {
+        $patron = Koha::Patrons->find( { userid => $user_id } );
+    }
 
     unless ($patron) {
         return $c->render( status => 404, openapi => { error => 'Object not found.' } );
