@@ -9,16 +9,17 @@ WHOLE POINT OF THIS!
 
 ## Implemented endpoints
 
-* /authorities/_:authority_id_
-* /authorities/ids
-* /biblios/_:biblio_id_
-* /biblios/_:biblio_id_/holds/count
-* /biblios/_:biblio_id_/items
-* /biblios/ids
-* /items/_:item_id_
-* /items/_:item_id_/holds/count
-* /items/ids
-* /libraries
+* GET  /authorities/_:authority_id_
+* GET  /authorities/ids
+* GET  /biblios/_:biblio_id_
+* GET  /biblios/_:biblio_id_/holds/count
+* GET  /biblios/_:biblio_id_/items
+* GET  /biblios/ids
+* GET  /items/_:item_id_
+* GET  /items/_:item_id_/holds/count
+* GET  /items/ids
+* GET  /libraries
+* POST /patrons/validation
 
 ## Install
 
