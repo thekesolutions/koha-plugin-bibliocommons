@@ -83,10 +83,6 @@ sub get_biblio {
         return $c->render( status => 404, openapi => { error => "Object not found." } );
     }
 
-    $c->app->types->type( marcxml => 'application/marcxml+xml' );
-    $c->app->types->type( mij     => 'application/marc-in-json' );
-    $c->app->types->type( marc    => 'application/marc' );
-
     return
         $c->respond_to(
             marcxml => { status => 200, format => 'marcxml', text => $record->as_xml_record },
