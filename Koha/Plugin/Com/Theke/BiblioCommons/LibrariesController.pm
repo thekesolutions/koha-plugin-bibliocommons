@@ -23,7 +23,7 @@ use Koha::Libraries;
 
 =head1 Koha::Plugin::Com::Theke::BiblioCommons::LibrariesController
 
-A class implementing the controller methods for the items-related API
+A class implementing the controller methods for the libraries-related API
 
 =head2 Class Methods
 
