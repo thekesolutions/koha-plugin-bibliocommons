@@ -92,25 +92,6 @@ sub get_biblio {
         );
 }
 
-=head3 get_biblio_holds_count
-
-=cut
-
-sub get_biblio_holds_count {
-    my $c = shift->openapi->valid_input or return;
-
-    my $biblio_id = $c->validation->param('biblio_id');
-    my $biblio    = Koha::Biblios->find($biblio_id);
-
-    unless ( $biblio ) {
-        return $c->render( status => 404, openapi => { error => "Object not found." } );
-    }
-
-    my $holds = Koha::Holds->search({ biblionumber => $biblio_id });
-
-    return $c->render( status => 200, openapi => $holds->count );
-}
-
 =head2 get_biblio_items
 
 =cut

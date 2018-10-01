@@ -83,25 +83,6 @@ sub get_item {
     return $c->render( status => 200, openapi => to_api($item->TO_JSON) );
 }
 
-=head3 get_item_holds_count
-
-=cut
-
-sub get_item_holds_count {
-    my $c = shift->openapi->valid_input or return;
-
-    my $item_id = $c->validation->param('item_id');
-    my $item    = Koha::Items->find($item_id);
-
-    unless ( $item ) {
-        return $c->render( status => 404, openapi => { error => "Object not found." } );
-    }
-
-    my $holds = Koha::Holds->search({ itemnumber => $item_id });
-
-    return $c->render( status => 200, openapi => $holds->count );
-}
-
 =head2 Internal methods
 
 =head3 to_id_object
