@@ -91,7 +91,7 @@ sub get_item_holds_count {
     my $c = shift->openapi->valid_input or return;
 
     my $item_id = $c->validation->param('item_id');
-    my $item    = Koha::Biblios->find($item_id);
+    my $item    = Koha::Items->find($item_id);
 
     unless ( $item ) {
         return $c->render( status => 404, openapi => { error => "Object not found." } );
