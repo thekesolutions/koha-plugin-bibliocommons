@@ -273,6 +273,12 @@ sub to_api {
         }
     }
 
+    # Fix status
+    $hold->{status} = ( !defined $hold->{status} ) ? 'pending'
+                    : ( $hold->{status} eq 'W' )   ? 'waiting'
+                    : ( $hold->{status} eq 'T' )   ? 'in_transit'
+                    : 'ERROR';
+
     return $hold;
 }
 
