@@ -1,6 +1,6 @@
 {
   "name": "koha-plugin-bibliocommons",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "previous_version": "0.5.0",
   "description": "BiblbioCommons connector plugin for Koha",
   "devDependencies": {
