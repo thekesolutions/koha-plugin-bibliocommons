@@ -143,10 +143,10 @@
       }
     }
   },
-  "/biblios/{biblio_id}/holds/count": {
+  "/biblios/{biblio_id}/holds": {
     "get": {
-      "x-mojo-to": "Com::Theke::BiblioCommons::BibliosController#get_biblio_holds_count",
-      "operationId": "get_biblio_holds_count",
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#get_biblio_holds",
+      "operationId": "get_biblio_holds",
       "tags": ["biblios"],
       "parameters": [
         {
@@ -163,6 +163,50 @@
       "responses": {
         "200": {
           "description": "Holds count for the biblio"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
+  "/biblios/{biblio_id}/holds/count": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#get_biblio_holds_count",
+      "operationId": "get_biblio_holds_count",
+      "tags": ["biblios"],
+      "parameters": [
+        {
+          "description": "Internal identifier for bibliographic records",
+          "in": "path",
+          "name": "biblio_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Holds count for the biblio",
+          "schema": {
+            "type": "integer"
+          }
         },
         "404": {
           "description": "An error occured",
@@ -328,9 +372,50 @@
       }
     }
   },
+  "/items/{item_id}/holds": {
+    "get": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#get_item_holds",
+      "operationId": "get_item_holds",
+      "tags": ["items"],
+      "parameters": [
+        {
+          "description": "Internal identifier for items",
+          "in": "path",
+          "name": "item_id",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Holds for the item"
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+              "type": "object",
+                "properties": {
+                  "error": {
+                    "description": "An explanation for the error",
+                    "type": "string"
+                  }
+                }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    }
+  },
   "/items/{item_id}/holds/count": {
     "get": {
-      "x-mojo-to": "Com::Theke::BiblioCommons::ItemsController#get_item_holds_count",
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#get_item_holds_count",
       "operationId": "get_item_holds_count",
       "tags": ["items"],
       "parameters": [
@@ -347,7 +432,10 @@
       ],
       "responses": {
         "200": {
-          "description": "Holds count for the item"
+          "description": "Holds count for the item",
+          "schema": {
+            "type": "integer"
+          }
         },
         "404": {
           "description": "An error occured",
