@@ -48,31 +48,29 @@ sub add_biblio_hold {
     my $body = $c->validation->param('body');
 
     my $expiration_date   = $body->{expiration_date};
-    my $hold_date         = $body->{hold_date};
     my $item_type_id      = $body->{item_type_id};
     my $notes             = $body->{notes};
     my $patron_id         = $body->{patron_id};
     my $pickup_library_id = $body->{pickup_library_id};
-    my $priority          = $body->{priority};
-    my $status            = $body->{status} // 'pending';
+#    my $priority          = $body->{priority};
 
-    my $found
-        = ( $status eq 'waiting' ) ? 'W'
-        : ( $status eq 'in_transit' ) ? 'T'
-        :                               undef;    # ( $status eq 'pending' )
+    if ( defined $item_type_id and !C4::Context->preference('AllowHoldItemTypeSelection') ) {
+        # Choosing item type is not allowed
+        $c->render( status => 400, openapi => 'Configuration disallows passing item_type_id' );
+    }
 
     my $hold_id = AddReserve(
         $pickup_library_id,
         $patron_id,
         $biblio_id,
-        undef,                                    # $bibitems
-        $priority,
-        $hold_date,
+        undef,                                    # bibitems
+        undef,                                    # priority
+        undef,                                    # hold_date / auto-calculate
         $expiration_date,
         $notes,
-        ($biblio) ? $biblio->title : undef,
-        undef,
-        $found,
+        $biblio->title,
+        undef, # item_id
+        undef, # found
         $item_type_id
     );
 
@@ -139,33 +137,30 @@ sub add_item_hold {
     my $body = $c->validation->param('body');
 
     my $expiration_date   = $body->{expiration_date};
-    my $hold_date         = $body->{hold_date};
     my $notes             = $body->{notes};
     my $patron_id         = $body->{patron_id};
     my $pickup_library_id = $body->{pickup_library_id};
-    my $priority          = $body->{priority};
-    my $status            = $body->{status} // 'pending';
-
-    my $found
-        = ( $status eq 'waiting' ) ? 'W'
-        : ( $status eq 'in_transit' ) ? 'T'
-        :                               undef;    # ( $status eq 'pending' )
+#    my $priority          = $body->{priority};
 
     my $biblio = $item->biblio;
+
+    unless ($biblio) {
+        return $c->render( status => 500, openapi => { error => "Parent biblio doesn't exist!" } );
+    }
 
     my $hold_id = AddReserve(
         $pickup_library_id,
         $patron_id,
-        undef,                                    # $biblio_id
-        undef,                                    # $bibitems
-        $priority,
-        $hold_date,
+        undef,                                    # biblio_id
+        undef,                                    # bibitems
+        undef,                                    # priority
+        undef,                                    # hold_date / auto-calculate
         $expiration_date,
         $notes,
         ($biblio) ? $biblio->title : undef,
         $item_id,
-        $found,
-        undef                                     # $item_type_id
+        undef,                                    # found
+        undef                                     # item_type_id
     );
 
     my $hold = Koha::Holds->find($hold_id);
@@ -305,7 +300,7 @@ our $to_api_mapping = {
     lowestPriority   => 'lowest_priority',
     suspend          => 'suspended',
     suspend_until    => 'suspended_until',
-    itemtype         => 'item_type'
+    itemtype         => 'item_type_id'
 };
 
 1;

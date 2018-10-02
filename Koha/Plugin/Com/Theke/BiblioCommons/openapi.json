@@ -147,7 +147,7 @@
     "get": {
       "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#get_biblio_holds",
       "operationId": "get_biblio_holds",
-      "tags": ["biblios"],
+      "tags": ["holds"],
       "parameters": [
         {
           "description": "Internal identifier for bibliographic records",
@@ -167,13 +167,87 @@
         "404": {
           "description": "An error occured",
           "schema": {
-              "type": "object",
-                "properties": {
-                  "error": {
-                    "description": "An explanation for the error",
-                    "type": "string"
-                  }
-                }
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "An explanation for the error",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    },
+    "post": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#add_biblio_hold",
+      "operationId": "add_biblio_hold",
+      "tags": [ "holds" ],
+      "parameters": [
+        {
+          "description": "Internal identifier for the bibliographic record",
+          "in": "path",
+          "name": "biblio_id",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "description": "Hold information",
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "patron_id": {
+                "type": "integer",
+                "description": "Internal identifier for the patron the hold is for"
+              },
+              "pickup_library_id": {
+                "type": "integer",
+                "description": "Internal identifier for the pickup library"
+              },
+              "expiration_date": {
+                "type": "string",
+                "format": "date",
+                "description": "Date the hold expires"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Notes"
+              },
+              "item_type_id": {
+                "type": "string",
+                "description": "Internal identifier for the item type that was requested"
+              }
+            },
+            "required": ["patron_id", "pickup_library_id"]
+          }
+        }
+      ],
+      "consumes": [ "application/json" ],
+      "produces": [ "application/json" ],
+      "responses": {
+        "200": {
+          "description": "Hold object",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "An explanation for the error",
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -403,6 +477,76 @@
                     "type": "string"
                   }
                 }
+          }
+        }
+      },
+      "x-koha-authorization": {
+        "permissions": {
+          "catalogue": "1"
+        }
+      }
+    },
+    "post": {
+      "x-mojo-to": "Com::Theke::BiblioCommons::HoldsController#add_item_hold",
+      "operationId": "add_item_hold",
+      "tags": [ "holds" ],
+      "parameters": [
+        {
+          "description": "Internal identifier for the item",
+          "in": "path",
+          "name": "item_id",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "description": "Hold information",
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "patron_id": {
+                "type": "integer",
+                "description": "Internal identifier for the patron the hold is for"
+              },
+              "pickup_library_id": {
+                "type": "integer",
+                "description": "Internal identifier for the pickup library"
+              },
+              "expiration_date": {
+                "type": "string",
+                "format": "date",
+                "description": "Date the hold expires"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Notes"
+              }
+            },
+            "required": ["patron_id", "pickup_library_id"]
+          }
+        }
+      ],
+      "consumes": [ "application/json" ],
+      "produces": [ "application/json" ],
+      "responses": {
+        "200": {
+          "description": "Hold object",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "An explanation for the error",
+                "type": "string"
+              }
+            }
           }
         }
       },
