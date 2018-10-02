@@ -13,11 +13,13 @@ WHOLE POINT OF THIS!
 * GET  /authorities/ids
 * GET  /biblios/_:biblio_id_
 * GET  /biblios/_:biblio_id_/holds
+* POST /biblios/_:biblio_id_/holds
 * GET  /biblios/_:biblio_id_/holds/count
 * GET  /biblios/_:biblio_id_/items
 * GET  /biblios/ids
 * GET  /items/_:item_id_
 * GET  /items/_:item_id_/holds
+* POST /items/_:item_id_/holds
 * GET  /items/_:item_id_/holds/count
 * GET  /items/ids
 * GET  /libraries
